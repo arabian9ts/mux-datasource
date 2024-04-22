@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "Mux-Datasource",
+  "id": "arabian9ts-mux-datasource",
+  "metrics": true,
+  "backend": true,
+  "executable": "gpx_mux_datasource",
+  "info": {
+    "description": "Mux video streaming metrics datasource",
+    "author": {
+      "name": "Arabian9ts"
+    },
+    "keywords": ["datasource"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=10.3.3",
+    "plugins": []
+  }
+}
