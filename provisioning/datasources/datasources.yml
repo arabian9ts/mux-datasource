@@ -11,4 +11,5 @@ datasources:
     jsonData:
       path: '/resources'
     secureJsonData:
-      apiKey: 'api-key'
+      tokenId: 'token-id'
+      tokenSecret: 'token-secret'

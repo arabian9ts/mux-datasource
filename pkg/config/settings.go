@@ -1,4 +1,4 @@
-package models
+package config
 
 import (
 	"encoding/json"
@@ -8,12 +8,12 @@ import (
 )
 
 type PluginSettings struct {
-	Path    string                `json:"path"`
 	Secrets *SecretPluginSettings `json:"-"`
 }
 
 type SecretPluginSettings struct {
-	ApiKey string `json:"apiKey"`
+	TokenID     string `json:"tokenId"`
+	TokenSecret string `json:"tokenSecret"`
 }
 
 func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSettings, error) {
@@ -30,6 +30,7 @@ func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSetti
 
 func loadSecretPluginSettings(source map[string]string) *SecretPluginSettings {
 	return &SecretPluginSettings{
-		ApiKey: source["apiKey"],
+		TokenID:     source["tokenId"],
+		TokenSecret: source["tokenSecret"],
 	}
 }
