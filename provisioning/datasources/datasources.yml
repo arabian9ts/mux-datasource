@@ -1,7 +1,7 @@
 apiVersion: 1
 
 datasources:
-  - name: 'mux-datasource'
+  - name: 'MUX Data'
     type: 'arabian9ts-mux-datasource'
     access: proxy
     isDefault: false
