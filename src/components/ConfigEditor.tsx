@@ -23,25 +23,27 @@ export function ConfigEditor(props: Props) {
 
   return (
     <>
-      <Legend>API Token</Legend>
-      <InlineField label='Token ID' labelWidth={16} interactive tooltip={'Secure json field (backend only)'}>
+      <Legend>API Access Token</Legend>
+      <InlineField label='Access Token ID' labelWidth={22} interactive tooltip={'Secure json field (backend only)'}>
         <SecretInput
           required
-          id='config-editor-token-id'
+          id='config-editor-access-token-id'
+          width={30}
           isConfigured={!!secureJsonFields?.tokenId}
           value={secureJsonData?.tokenId || ''}
-          placeholder='Enter your Token ID'
+          placeholder='Enter your Access Token ID'
           onReset={() => { handleChange('tokenId', '', false) }}
           onChange={(e) => handleChange('tokenId', e.currentTarget.value, false)}
         />
       </InlineField>
-      <InlineField label='Token Secret' labelWidth={16} interactive tooltip={'Secure json field (backend only)'}>
+      <InlineField label='Access Token Secret' labelWidth={22} interactive tooltip={'Secure json field (backend only)'}>
         <SecretInput
           required
-          id='config-editor-token-secret'
+          id='config-editor-access-token-secret'
+          width={30}
           isConfigured={!!secureJsonFields?.tokenSecret}
           value={secureJsonData?.tokenSecret || ''}
-          placeholder='Enter your Token Secret'
+          placeholder='Enter your Access Token Secret'
           onReset={() => { handleChange('tokenSecret', '', false) }}
           onChange={(e) => handleChange('tokenSecret', e.currentTarget.value, false)}
         />
