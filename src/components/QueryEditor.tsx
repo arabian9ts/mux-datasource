@@ -49,7 +49,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
           <EditorFieldGroup>
             <EditorField label="Metric" width={26}>
               <Select
-                options={metricIds.map((n) => toOption(n))}
+                options={metricIds.map((n: string) => toOption(n))}
                 value={query.metricId}
                 width={28}
                 onChange={(e) => handleChange('metricId', e?.value!)}
@@ -59,7 +59,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
             </EditorField>
             <EditorField label="Measurement" width={16}>
               <Select
-                options={measurements.map((m) => toOption(m))}
+                options={measurements.map((m: string) => toOption(m))}
                 value={query.measurement}
                 width={28}
                 onChange={(e) => handleChange('measurement', e?.value!)}

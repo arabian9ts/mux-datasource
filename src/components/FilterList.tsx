@@ -3,7 +3,7 @@ import { QueryEditorProps, toOption } from '@grafana/data';
 import { Select, Stack } from '@grafana/ui';
 import { AccessoryButton, Space } from '@grafana/experimental';
 import { DataSource } from '../datasource';
-import { DataSourceOptions, Query } from '../types';
+import { DataSourceOptions, MetricFilter, Query } from '../types';
 
 type Props = QueryEditorProps<
   DataSource,
@@ -43,7 +43,7 @@ export const FilterList = ({ query, datasource, groups, onChange, onRunQuery }: 
   return (
     <>
       <Stack direction="row" wrap="wrap" gap={3}>
-        {query.filters?.map((item, index) => (
+        {query.filters.map((item: MetricFilter, index: number) => (
           <Stack>
             <Select
               width="auto"
@@ -65,8 +65,8 @@ export const FilterList = ({ query, datasource, groups, onChange, onRunQuery }: 
               showAllSelectedWhenOpen={true}
               onOpenMenu={() => listBreakdowns(item.group)}
               allowCustomValue
-              options={breakdownGroups.map((v) => toOption(v))}
-              onChange={(e) => { update(index, item.group, '=', e.value || '') }}
+              options={breakdownGroups.map((v: string) => toOption(v))}
+              onChange={(e) => { update(index, item.group, item.operator, e.value || '') }}
             />
             <AccessoryButton icon="times" variant="secondary" onClick={() => remove(index)} type="button" />
           </Stack>
