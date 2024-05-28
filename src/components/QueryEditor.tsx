@@ -1,45 +1,86 @@
-import React from 'react';
-import { InlineField, Input, Stack } from '@grafana/ui';
-import { QueryEditorProps } from '@grafana/data';
+import React, { useEffect, useState } from 'react';
+import { Select} from '@grafana/ui';
+import { QueryEditorProps, toOption } from '@grafana/data';
+import { FilterList } from './FilterList';
 import { DataSource } from '../datasource';
-import { DataSourceOptions, Query } from '../types';
+import { EditorField, EditorFieldGroup, EditorRow, EditorRows } from '@grafana/experimental';
+import { DataSourceOptions, Query, Metric, GroupBy, Measurement } from '../types';
 
 type Props = QueryEditorProps<DataSource, Query, DataSourceOptions>;
 
-export function QueryEditor({ query, onChange, onRunQuery }: Props) {
-  // const onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   onChange({ ...query, queryText: event.target.value });
-  // };
+export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) {
+  const [metricIds, setMetricIds] = useState<Metric[]>([]);
+  const [measurements, setMeasurements] = useState<Measurement[]>([]);
+  const [groups, setGroups] = useState<GroupBy[]>([]);
 
-  // const onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   onChange({ ...query, constant: parseFloat(event.target.value) });
-  //   // executes the query
-  //   onRunQuery();
-  // };
+  useEffect(() => {
+    datasource
+      .listMetrics()
+      .then((data) => { setMetricIds(data) })
+      .catch(console.error);
+  }, [datasource])
 
-  // const { queryText, constant } = query;
+  useEffect(() => {
+    datasource
+      .listMeasurements()
+      .then((data) => { setMeasurements(data) })
+      .catch(console.error);
+  }, [datasource])
+
+  useEffect(() => {
+    datasource
+      .listGroups()
+      .then((data) => { setGroups(data) })
+      .catch(console.error);
+  }, [datasource])
+
+  const handleChange = <Key extends keyof Query, Value extends Query[Key]>(
+    key: Key,
+    value: Value,
+  ) => {
+    onChange({...query, [key]: value});
+    onRunQuery();
+  };
 
   return (
-    <Stack gap={0}>
-      <InlineField label="Constant">
-        <Input
-          id="query-editor-constant"
-          // onChange={onConstantChange}
-          // value={constant}
-          width={8}
-          type="number"
-          step="0.1"
-        />
-      </InlineField>
-      <InlineField label="Query Text" labelWidth={16} tooltip="Not used yet">
-        <Input
-          id="query-editor-query-text"
-          // onChange={onQueryTextChange}
-          // value={queryText || ''}
-          required
-          placeholder="Enter a query"
-        />
-      </InlineField>
-    </Stack>
+    <>
+      <EditorRows>
+        <EditorRow>
+          <EditorFieldGroup>
+            <EditorField label="Metric" width={26}>
+              <Select
+                options={metricIds.map((n) => toOption(n))}
+                value={query.metricId}
+                width={28}
+                onChange={(e) => handleChange('metricId', e?.value!)}
+                className="inline-element"
+                isClearable={false}
+              />
+            </EditorField>
+            <EditorField label="Measurement" width={16}>
+              <Select
+                options={measurements.map((m) => toOption(m))}
+                value={query.measurement}
+                width={28}
+                onChange={(e) => handleChange('measurement', e?.value!)}
+                className="inline-element"
+                isClearable={false}
+              />
+            </EditorField>
+          </EditorFieldGroup>
+        </EditorRow>
+        <EditorRow>
+          <EditorField label="FilterList">
+            <FilterList
+              groups={groups}
+              onChange={onChange}
+              onRunQuery={onRunQuery}
+              datasource={datasource}
+              query={query}
+            />
+          </EditorField>
+        </EditorRow>
+      </EditorRows>
+    </>
   );
 }
