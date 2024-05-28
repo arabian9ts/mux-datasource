@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { QueryEditorProps, toOption } from '@grafana/data';
 import { Select, Stack } from '@grafana/ui';
-import { AccessoryButton, Space } from '@grafana/experimental';
+import { AccessoryButton } from '@grafana/experimental';
 import { DataSource } from '../datasource';
+import { Spacer } from './Spacer';
 import { DataSourceOptions, MetricFilter, Query } from '../types';
 
 type Props = QueryEditorProps<
@@ -12,8 +13,14 @@ type Props = QueryEditorProps<
     groups: string[];
   };
 
-export const FilterList = ({ query, datasource, groups, onChange, onRunQuery }: Props) => {
+export const FilterList = ({ query, datasource, groups, onChange }: Props) => {
   const [breakdownGroups, setBreakdownGroups] = useState<string[]>([]);
+  const [filters, setFilters] = useState<MetricFilter[]>(query.filters);
+
+  useEffect(() => {
+    onChange({ ...query, filters });
+  }, [filters, onChange, query]);
+
   const listBreakdowns = useCallback((group: string) => {
     if (group) {
       setBreakdownGroups([]);
@@ -24,27 +31,26 @@ export const FilterList = ({ query, datasource, groups, onChange, onRunQuery }: 
   }, [datasource, query.metricId]);
 
   const add = (group: string, operator: string, value: string) => {
-    query.filters.push({ group, operator, value });
-    onChange(query);
+    setFilters([...filters, { group, operator, value }]);
   }
 
   const remove = (index: number) => {
-    query.filters.splice(index, 1);
-    onChange(query);
-    onRunQuery();
+    setFilters(filters.filter((_: any, i: number) => i !== index));
   }
 
   const update = (index: number, group: string, operator: string, value: string) => {
-    query.filters[index] = { group, operator, value };
-    onChange(query);
-    onRunQuery();
+    setFilters(
+      filters.map((item: MetricFilter, i: number) =>
+        i === index ? { group, operator, value } : item
+      )
+    );
   }
 
   return (
     <>
       <Stack direction="row" wrap="wrap" gap={3}>
         {query.filters.map((item: MetricFilter, index: number) => (
-          <Stack>
+          <Stack key={index}>
             <Select
               width="auto"
               value={item.group ? toOption(item.group) : null}
@@ -73,7 +79,7 @@ export const FilterList = ({ query, datasource, groups, onChange, onRunQuery }: 
         ))}
       </Stack>
 
-      <Space v={2} layout='block' />
+      <Spacer />
 
       <AccessoryButton icon="plus" variant="secondary" onClick={() => { add('', '=', '') }} type="button">
         Add filter

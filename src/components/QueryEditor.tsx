@@ -70,7 +70,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
           </EditorFieldGroup>
         </EditorRow>
         <EditorRow>
-          <EditorField label="FilterList">
+          <EditorField label="Filters">
             <FilterList
               groups={groups}
               onChange={onChange}
