@@ -122,7 +122,7 @@ func (d *Datasource) timeseries(ctx context.Context, q MetricQuery, timeRange ba
 	frame := data.NewFrame(q.MetricID)
 	frame.Fields = append(frame.Fields,
 		data.NewField("time", nil, times),
-		data.NewField(q.MetricID, nil, values),
+		data.NewField(q.FrameName(), nil, values),
 	)
 
 	return frame, nil

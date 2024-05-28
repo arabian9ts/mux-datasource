@@ -2,6 +2,7 @@ package plugin
 
 import (
 	"fmt"
+	"strings"
 )
 
 type MetricQuery struct {
@@ -29,4 +30,19 @@ func (o operator) String() string {
 
 func (m MetricFilter) String() string {
 	return fmt.Sprintf("%s%s:%s", m.Operator.String(), m.Group, m.Value)
+}
+
+func (m MetricQuery) FrameName() string {
+	metric := m.MetricID
+	if len(m.Filters) > 0 {
+		cond := strings.Builder{}
+		for i, f := range m.Filters {
+			if i > 0 {
+				cond.WriteString(",")
+			}
+			cond.WriteString(f.String())
+		}
+		metric = fmt.Sprintf("%s{%s}", metric, cond.String())
+	}
+	return fmt.Sprintf("%s(%s)", m.Measurement, metric)
 }
