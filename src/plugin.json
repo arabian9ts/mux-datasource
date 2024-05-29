@@ -12,13 +12,16 @@
     "author": {
       "name": "arabian9ts"
     },
-    "keywords": ["datasource"],
+    "keywords": ["datasource", "mux", "streaming-experience"],
     "logos": {
       "small": "img/logo.jpg",
       "large": "img/logo.jpg"
     },
     "links": [],
-    "screenshots": [],
+    "screenshots": [
+      { "name": "DataSource Config Editor", "path": "img/config.png" },
+      { "name": "DataSource Query Editor", "path": "img/query.png" }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
