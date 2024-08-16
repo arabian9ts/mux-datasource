@@ -78,12 +78,8 @@ func (d *Datasource) query(ctx context.Context, _ backend.PluginContext, query b
 }
 
 func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	cfg, err := config.LoadPluginSettings(*req.PluginContext.DataSourceInstanceSettings)
-	if err != nil {
-		return nil, err
-	}
-
 	res := &backend.CheckHealthResult{}
+	cfg, err := config.LoadPluginSettings(*req.PluginContext.DataSourceInstanceSettings)
 	if err != nil {
 		res.Status = backend.HealthStatusError
 		res.Message = "Unable to load settings"

@@ -1,6 +1,6 @@
 module github.com/arabian9ts/mux-datasource
 
-go 1.22
+go 1.23.0
 
 require github.com/grafana/grafana-plugin-sdk-go v0.225.0
 
