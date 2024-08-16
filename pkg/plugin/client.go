@@ -4,11 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
@@ -49,12 +47,6 @@ func (d *Datasource) newRequest(ctx context.Context, path string, params map[str
 	req.SetBasicAuth(d.tokenID, d.tokenSecret)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
-
-	body, err := httputil.DumpRequest(req, true)
-	if err != nil {
-		log.DefaultLogger.Error("Failed to dump request", "error", err)
-	}
-	log.DefaultLogger.Error("Request", "body", string(body))
 
 	return req, nil
 }

@@ -9,7 +9,6 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 
 	"github.com/arabian9ts/mux-datasource/pkg/config"
 )
@@ -80,7 +79,9 @@ func (d *Datasource) query(ctx context.Context, _ backend.PluginContext, query b
 
 func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
 	cfg, err := config.LoadPluginSettings(*req.PluginContext.DataSourceInstanceSettings)
-	log.DefaultLogger.Info("CheckHealth", "datasource", req.PluginContext.DataSourceInstanceSettings.DecryptedSecureJSONData)
+	if err != nil {
+		return nil, err
+	}
 
 	res := &backend.CheckHealthResult{}
 	if err != nil {
