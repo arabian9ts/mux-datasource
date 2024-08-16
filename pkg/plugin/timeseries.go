@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
@@ -100,14 +99,12 @@ func (d *Datasource) timeseries(ctx context.Context, q MetricQuery, timeRange ba
 	if resp.StatusCode != http.StatusOK {
 		var msg bytes.Buffer
 		_, _ = msg.ReadFrom(resp.Body)
-		log.DefaultLogger.Error("Request error", "status", resp.Status, "body", msg.String())
 		return nil, fmt.Errorf("request error: %s", msg.String())
 	}
 
 	ts := new(timeSeriesResponse)
 	err = json.NewDecoder(resp.Body).Decode(ts)
 	if err != nil {
-		log.DefaultLogger.Error("Failed to decode timeseries", "error", err)
 		return nil, err
 	}
 

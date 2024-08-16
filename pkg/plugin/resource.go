@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
 
 	"github.com/arabian9ts/mux-datasource/pkg/constants"
@@ -43,7 +42,6 @@ func (d *Datasource) measurements(w http.ResponseWriter, _ *http.Request) {
 func (d *Datasource) groups(w http.ResponseWriter, r *http.Request) {
 	dims, err := d.listGroups(r.Context())
 	if err != nil {
-		log.DefaultLogger.Error("Failed to list groups", "error", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -69,14 +67,12 @@ func (d *Datasource) listGroups(ctx context.Context) ([]string, error) {
 	if listResp.StatusCode != http.StatusOK {
 		var msg bytes.Buffer
 		_, _ = msg.ReadFrom(listResp.Body)
-		log.DefaultLogger.Error("Request error", "status", listResp.Status, "body", msg.String())
 		return nil, fmt.Errorf("request error: %s", msg.String())
 	}
 
 	var dims listDimensionResponse
 	err = json.NewDecoder(listResp.Body).Decode(&dims)
 	if err != nil {
-		log.DefaultLogger.Error("Failed to decode dimensions", "error", err)
 		return nil, err
 	}
 
