@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Select} from '@grafana/ui';
+import { Select } from '@grafana/ui';
 import { QueryEditorProps, toOption } from '@grafana/data';
 import { FilterList } from './FilterList';
 import { DataSource } from '../datasource';
