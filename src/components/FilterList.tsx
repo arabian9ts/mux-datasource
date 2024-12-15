@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { QueryEditorProps, toOption } from '@grafana/data';
 import { Select, Stack } from '@grafana/ui';
 import { AccessoryButton } from '@grafana/experimental';
@@ -13,13 +13,8 @@ type Props = QueryEditorProps<
     groups: string[];
   };
 
-export const FilterList = ({ query, datasource, groups, onChange }: Props) => {
+export const FilterList = ({ query, datasource, groups, onChange, onRunQuery }: Props) => {
   const [breakdownGroups, setBreakdownGroups] = useState<string[]>([]);
-  const [filters, setFilters] = useState<MetricFilter[]>(query.filters);
-
-  useEffect(() => {
-    onChange({ ...query, filters });
-  }, [filters, onChange, query]);
 
   const listBreakdowns = useCallback((group: string) => {
     if (group) {
@@ -31,25 +26,28 @@ export const FilterList = ({ query, datasource, groups, onChange }: Props) => {
   }, [datasource, query.metricId]);
 
   const add = (group: string, operator: string, value: string) => {
-    setFilters([...filters, { group, operator, value }]);
+    const filters = [...query.filters, { group, operator, value }];
+    onChange({ ...query, filters });
   }
 
   const remove = (index: number) => {
-    setFilters(filters.filter((_: any, i: number) => i !== index));
+    const filters = query.filters.filter((_, i) => i !== index);
+    onChange({ ...query, filters });
+    onRunQuery();
   }
 
   const update = (index: number, group: string, operator: string, value: string) => {
-    setFilters(
-      filters.map((item: MetricFilter, i: number) =>
-        i === index ? { group, operator, value } : item
-      )
+    const filters = query.filters.map((item: MetricFilter, i: number) =>
+      i === index ? { group, operator, value } : item
     );
+    onChange({ ...query, filters });
+    onRunQuery();
   }
 
   return (
     <>
       <Stack direction="row" wrap="wrap" gap={3}>
-        {query.filters.map((item: MetricFilter, index: number) => (
+        {(query.filters || []).map((item: MetricFilter, index: number) => (
           <Stack key={index}>
             <Select
               width="auto"
